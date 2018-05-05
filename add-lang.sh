@@ -27,9 +27,23 @@ fi
 
 OUTPUT_PATH=assets/dictionaries/dictionary.${LANGUAGE_WITH_REGION}.txt
 
-# The grep for lower case doesn't work for Farsi (and likely other languages) so I just excluded it for those languages.
-aspell -l ${LANGUAGE_WITH_REGION} dump master | aspell -l ${LANGUAGE} expand | tr ' ' '\n' | awk 'length($0) < 10 && length($0) > 2' | sort > ${OUTPUT_PATH}
+if [[ $LANGUAGE == 'fa' ]]; then
+	FILTER="cat"
+elif [[ $LANGUAGE == 'de' ]]; then
+	FILTER="grep -P ^[[:upper:]]?\p{Ll}*$"
+else
+	FILTER="grep -P ^\p{Ll}*$"
+fi
 
-# aspell -l ${LANGUAGE_WITH_REGION} dump master | aspell -l ${LANGUAGE} expand | tr ' ' '\n' | grep -P "^\p{Ll}*$" | awk 'length($0) < 10 && length($0) > 2' | sort > ${OUTPUT_PATH}
+echo "Filter: $FILTER"
+
+# The grep for lower case doesn't work for Farsi (and likely other languages) so I just excluded it for those languages.
+#aspell -l ${LANGUAGE_WITH_REGION} dump master | aspell -l ${LANGUAGE} expand | tr ' ' '\n' | awk 'length($0) < 10 && length($0) > 2' | sort > ${OUTPUT_PATH}
+
+# German words use capital letters for nouns, so we can't just exclude words with upper case letters.
+# Instead, include words where only the first letter is upper case, and exclude those with upper case letters elsewhere.
+
+# For English, exclude all words with any upper case letters
+aspell -l ${LANGUAGE_WITH_REGION} dump master | aspell -l ${LANGUAGE} expand | tr ' ' '\n' | $FILTER | awk 'length($0) < 10 && length($0) > 2' | sort > ${OUTPUT_PATH}
 
 echo "Wrote ${OUTPUT_PATH}"
