@@ -20,6 +20,10 @@ public class DeGerman extends Language {
 
     @Override
     public String toDisplay(String value) {
+        if (value.equals("ß")) {
+            return value;
+        }
+
         return value.toUpperCase(getLocale());
     }
 
