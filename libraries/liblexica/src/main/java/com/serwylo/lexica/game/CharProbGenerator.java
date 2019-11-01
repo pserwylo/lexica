@@ -42,6 +42,12 @@ public class CharProbGenerator {
 
 		try {
 			for(String line=br.readLine();line != null; line=br.readLine()) {
+				// Allow for comments in the file, useful to explain some characteristics of the
+				// letter distribution.
+				if (line.length() > 0 && line.charAt(0) == '#') {
+					continue;
+				}
+
 				String chunks[] = line.toLowerCase(language.getLocale()).split(" ");
 				ProbabilityQueue pq = new ProbabilityQueue(language.applyMandatorySuffix(chunks[0]));
 				for(int i=1;i<chunks.length;i++) {
