@@ -52,6 +52,7 @@ def languages = [
   "jp",
   "nl",
   "ru",
+  "sv",
   "uk",
 ]
 languages.each { lang ->
