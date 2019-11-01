@@ -71,8 +71,10 @@ public class GeneticAlgorithm {
 
         File output = new File(outputDir, fileName);
         FileWriter writer = new FileWriter(output);
-        writer.write(genome.getFitness().toString() + "\n" + genome.toString());
+        writer.write("# " + genome.getFitness().toString() + "\n" + genome.toString());
         writer.close();
+
+        System.out.println("Wrote probability distribution to " + outputDir + File.separatorChar + fileName);
     }
 
     private static String renderBoardToString(Board board) {

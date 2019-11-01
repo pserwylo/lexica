@@ -1,4 +1,4 @@
-Min: 28, mean: 118, max: 292, stddev: 50, score: 11499
+# Min: 28, mean: 118, max: 292, stddev: 50, score: 11499
 a 93 43 9 1
 b 10 1 1
 c 1 1
