@@ -11,6 +11,7 @@
 		<item>@string/pref_dict_jp</item>
 		<item>@string/pref_dict_nl</item>
 		<item>@string/pref_dict_ru</item>
+		<item>@string/pref_dict_sv</item>
 		<item>@string/pref_dict_uk_ua</item>
 		<item>@string/pref_dict_uk</item>
 		<item>@string/pref_dict_us</item>
@@ -29,6 +30,7 @@
 		<item>jp</item>
 		<item>nl</item>
 		<item>ru</item>
+		<item>sv</item>
 		<item>uk</item>
 		<item>UK</item>
 		<item>US</item>
