@@ -2,6 +2,7 @@ apply plugin: 'java'
 
 dependencies {
     testImplementation "junit:junit:4.13"
+    testImplementation 'hu.webarticum:tree-printer:1.1'
 }
 
 // See https://code.google.com/p/android/issues/detail?id=64887 for why we copy files in this manner for tests.

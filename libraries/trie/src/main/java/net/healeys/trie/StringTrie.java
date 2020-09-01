@@ -9,7 +9,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,7 +22,7 @@ import java.util.TreeMap;
 
 public class StringTrie extends Trie {
 
-    private final Node rootNode;
+    final Node rootNode;
 
     public StringTrie(Language language) {
         super(language);
@@ -208,11 +210,11 @@ public class StringTrie extends Trie {
         return solutions;
     }
 
-    private static class Node extends TrieNode {
+    static class Node extends TrieNode {
 
-        private final Map<String, Node> children = new HashMap<>();
+        final Map<String, Node> children = new HashMap<>();
 
-        private boolean isWord;
+        boolean isWord;
 
         private Node(Language language) {
             super(language);
@@ -311,8 +313,37 @@ public class StringTrie extends Trie {
             return character;
         }
 
-        private Node maybeChildAt(String word, int position) {
-            return children.get(getCharAt(word, position));
+        /**
+         * Perhaps return multiple children, to deal with the normalization of unicode characters with diacritics.
+         * <p>
+         * For example, if we search for the letter "e", then we want to return Trie nodes for both "e" and "é" if they
+         * exist.
+         *
+         * @param strict If true, only return a single node with exact matching diacritics (if any).
+         */
+        private List<Node> maybeChildAt(String word, int position, boolean strict) {
+            String character = getCharAt(word, position);
+
+            if (strict) {
+                Node node = children.get(character);
+                return node == null ? new ArrayList<>() : Collections.singletonList(node);
+            }
+
+            List<Node> nodes = new ArrayList<>(2);
+
+            for (String c : children.keySet()) {
+                if (c.equals(character)) {
+                    nodes.add(children.get(c));
+                } else if (!Normalizer.isNormalized(c, Normalizer.Form.NFKD)) {
+                    String normalized = Normalizer.normalize(c, Normalizer.Form.NFKD);
+                    char letter = normalized.charAt(0);
+                    if (letter == character.charAt(0)) {
+                        nodes.add(children.get(c));
+                    }
+                }
+            }
+
+            return nodes;
         }
 
         private Node maybeChildAt(String childChar) {
@@ -321,13 +352,13 @@ public class StringTrie extends Trie {
 
         private Node ensureChildAt(String word, int position) {
             String character = getCharAt(word, position);
-            Node existingNode = maybeChildAt(word, position);
-            if (existingNode == null) {
+            List<Node> existingNode = maybeChildAt(word, position, true);
+            if (existingNode.size() == 0) {
                 Node node = new Node(language);
                 children.put(character, node);
                 return node;
             } else {
-                return existingNode;
+                return existingNode.get(0);
             }
         }
 
@@ -346,8 +377,14 @@ public class StringTrie extends Trie {
                 return isWord;
             }
 
-            Node childNode = maybeChildAt(word, currentPosition);
-            return childNode != null && childNode.isAnyWord(word, nextPosition(word, currentPosition));
+            List<Node> childNodes = maybeChildAt(word, currentPosition, false);
+            for (Node child : childNodes) {
+                if (child.isAnyWord(word, nextPosition(word, currentPosition))) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         @Override
