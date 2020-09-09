@@ -77,7 +77,6 @@
     <string name="dialog_about_title">Sobre o Lexica</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="dialog_ok">OK</string>
-    <string name="dialog_no_saved">Não há jogos gravados. Se conseguir ler esta mensagem, provavelmente algo está errado.</string>
     <string name="pref_sounds_summary">Se os efeitos sonoros estão ou não ativados</string>
     <string name="pref_sounds">Sons ativados</string>
     <string name="pref_hintMode_summary">Mostra a quantidade de palavras em que cada letra pode ser usada</string>

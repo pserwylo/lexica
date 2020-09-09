@@ -27,7 +27,6 @@
     <string name="letter_points">Bokstavpoeng</string>
     <string name="pref_sounds">Lyder påskrudd</string>
     <string name="pref_sounds_summary">Hvorvidt eller ei lydeffekter er påskrudd</string>
-    <string name="dialog_no_saved">Det er ingen lagrede spill. Hvis du kan lese denne meldingen, har antagelig noe gått i stykker.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Avbryt</string>
     <string name="dialog_about_title">Om Lexica</string>

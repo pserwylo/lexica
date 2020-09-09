@@ -5,7 +5,6 @@
     <string name="button_ok">OK</string>
     <string name="dialog_about_title">Относно Lexica</string>
     <string name="dialog_cancel">Отказ</string>
-    <string name="dialog_no_saved">Няма запазена игра. Ако четеш това съобщение, значи нещо се е счупило.</string>
     <string name="dialog_ok">ОК</string>
     <string name="found_words">Намерени Думи</string>
     <string name="hide_missed">Скрий Пропуснатите Думи</string>

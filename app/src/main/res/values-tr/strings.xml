@@ -37,7 +37,6 @@
     <string name="letter_points">Harf Puanları</string>
     <string name="pref_sounds">Sesler Etkinleştirildi</string>
     <string name="pref_sounds_summary">Ses efektlerinin etkinleştirilip etkinleştirilmediği</string>
-    <string name="dialog_no_saved">Kayıtlı oyun yok. Eğer bu mesajı okuyorsanız, bir şeyler ters gitti demektir.</string>
     <string name="dialog_ok">TAMAM</string>
     <string name="dialog_cancel">İptal</string>
     <string name="dialog_about_title">Lexica Hakkında</string>

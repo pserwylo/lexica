@@ -69,7 +69,6 @@
 \n4x4-laudalla sanojen pitää olla vähintään kolmikirjaimisia. 5x5-laudalla sanojen pitää olla vähintään nelikirjaimisia. Kolmi- ja nelikirjaimet sanat ovat yhden pisteen arvoisia. Pidemmät sanat ovat useamman pisteen arvoisia. Erisnimiä ei lasketa.
 \n
 \n</string>
-    <string name="dialog_no_saved">Peliä ei ole tallennettu. Jos luet tätä viestiä, jokin on todennäköisesti mennyt rikki.</string>
     <string name="pref_sounds_summary">Käytetäänkö äänitehosteita vai ei</string>
     <string name="pref_sounds">Äänet käytössä</string>
     <string name="hint_both">Molemmat</string>

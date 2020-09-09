@@ -27,7 +27,6 @@
 	<string name="pref_sounds">با صدا</string>
 	<string name="pref_sounds_summary">صدای بازی فعال است یا خیر</string>
 
-	<string name="dialog_no_saved">بازی ذخیره شده‌ای وجود ندارد. اگر توانستید این پیام را بخوانید، احتمالاً یک جای کار می‌لنگد.</string>
 	<string name="dialog_ok">باشه</string>
 	<string name="dialog_cancel">بی‌خیال</string>
 

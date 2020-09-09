@@ -37,7 +37,6 @@
     <string name="menu_rotate_board">Pööra mängulauda</string>
     <string name="dialog_cancel">Tühista</string>
     <string name="dialog_ok">Sobib</string>
-    <string name="dialog_no_saved">Ühtegi mängu pole salvestatud. Kui sa saad lugeda seda sõnumit, siis on midagi katki läinud.</string>
     <string name="pref_sounds_summary">Kas heliefektid on lubatud või mitte</string>
     <string name="pref_sounds">Helid on sisse lülitatud</string>
     <string name="hint_both">Mõlemad</string>

@@ -27,7 +27,6 @@
 	<string name="pref_sounds">Sonido Habilitado</string>
 	<string name="pref_sounds_summary">Si los efectos de sonidos están habilitados o no</string>
 
-	<string name="dialog_no_saved">No hay partidas guardadas. Si lees este mensaje, probablemente algo está estropeado.</string>
 	<string name="dialog_ok">Aceptar</string>
 	<string name="dialog_cancel">Cancelar</string>
 

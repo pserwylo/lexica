@@ -35,7 +35,6 @@
     <string name="letter_points">По очкам букв</string>
     <string name="pref_sounds">Звуки</string>
     <string name="pref_sounds_summary">Использовать звуковые эффекты или нет</string>
-    <string name="dialog_no_saved">Игра не сохранена. Возможно, что-то пошло не так.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Отмена</string>
     <string name="dialog_about_title">О Lexica</string>

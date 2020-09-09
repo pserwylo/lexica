@@ -27,7 +27,6 @@
 	<string name="pref_sounds">音效</string>
 	<string name="pref_sounds_summary">選擇遊戲會否發出音效</string>
 
-	<string name="dialog_no_saved">沒有儲存遊戲。如果您看到此訊息，遊戲很可能出現了問題。</string>
 	<string name="dialog_ok">確定</string>
 	<string name="dialog_cancel">取消</string>
 

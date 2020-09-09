@@ -38,7 +38,6 @@
     <string name="letter_points">Punty Liter</string>
     <string name="pref_sounds">Włącz Dźwięki</string>
     <string name="pref_sounds_summary">Czy efekty dźwiękowe są włączone</string>
-    <string name="dialog_no_saved">Nie ma zapisanej gry. Jeśli możesz przeczytać tę wiadomość, coś jest prawdopodobnie uszkodzone.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Anuluj</string>
     <string name="dialog_about_title">O Lexica</string>

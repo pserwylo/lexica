@@ -79,5 +79,4 @@
     <string name="reset_scores_prompt">Είστε βέβαιοι ότι θέλετε να επαναφέρετε όλες τις υψηλές βαθμολογίες για όλους τους τρόπους παιχνιδιού στο μηδέν;</string>
     <string name="pref_dict_fr_fr">Γαλλικά</string>
     <string name="pref_dict">Λεξικό</string>
-    <string name="dialog_no_saved">Δεν υπάρχει αποθηκευμένο παιχνίδι. Αν μπορείτε να διαβάσετε αυτό το μήνυμα, κάτι είναι πιθανόν σπασμένο.</string>
 </resources>

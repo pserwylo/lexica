@@ -22,7 +22,6 @@
     <string name="time_30m">30 minuten</string>
     <string name="pref_sounds">Geluiden ingeschakeld</string>
     <string name="pref_sounds_summary">Geluidseffecten in-/uitschakelen</string>
-    <string name="dialog_no_saved">Er is geen opgeslagen spel beschikbaar. Als je dit bericht kunt lezen, dan is er waarschijnlijk iets kapot.</string>
     <string name="dialog_ok">Oké</string>
     <string name="dialog_cancel">Annuleren</string>
     <string name="dialog_about_title">Over Lexica</string>

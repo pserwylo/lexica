@@ -22,7 +22,6 @@
     <string name="time_30m">30 分</string>
     <string name="pref_sounds">サウンドが有効です</string>
     <string name="pref_sounds_summary">効果音を有効にするかどうか</string>
-    <string name="dialog_no_saved">ゲームは保存されていません。このメッセージが表示されるのは、何かが壊れている可能性あります。</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">キャンセル</string>
     <string name="dialog_about_title">Lexica について</string>

@@ -41,7 +41,6 @@
     <string name="total_words">Wörter insgesamt:</string>
     <string name="view_word"><u>Ansicht</u></string>
     <string name="words">Wörter</string>
-    <string name="dialog_no_saved">Es wird kein Spiel gespeichert. Wenn Ihnen diese Nachricht angezeigt wird, ist wahrscheinlich etwas nicht in Ordnung.</string>
     <string name="dialog_about_content">Berühren Sie den Bildschirm und bewegen Sie Ihren Finger über benachbarte Felder, um Wörter zu buchstabieren. Sie haben drei Minuten, um so viele Wörter wie möglich zu finden.
 \n
 \nPunktevergabe:

@@ -21,9 +21,6 @@
     <string name="time_30m">30 minuti</string>
     <string name="pref_sounds">Suoni abilitati</string>
     <string name="pref_sounds_summary">Se i suoni sono abilitati oppure no</string>
-    <string name="dialog_no_saved">Nessuna partita salvata.
-\nSe stai leggendo
-\nquesto messaggio qualcosa non ha funzionato.</string>
     <string name="dialog_ok">Accetta</string>
     <string name="dialog_cancel">Annulla</string>
     <string name="dialog_about_title">Informazioni su Lexica</string>

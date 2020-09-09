@@ -22,7 +22,6 @@
     <string name="time_30m">30 minuts</string>
     <string name="pref_sounds">Habilita el so</string>
     <string name="pref_sounds_summary">Si voleu els efectes de so</string>
-    <string name="dialog_no_saved">No hi ha cap partida desada. Si podeu llegir aquest missatge, alguna cosa s\'ha espatllat.</string>
     <string name="dialog_ok">D’acord</string>
     <string name="dialog_cancel">Cancel·la</string>
     <string name="dialog_about_title">Quant al Lexica</string>

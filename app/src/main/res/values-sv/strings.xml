@@ -46,7 +46,6 @@
     <string name="hint_both">Både</string>
     <string name="pref_sounds">Ljud aktiverat</string>
     <string name="pref_sounds_summary">Huravida ljud är på eller inte</string>
-    <string name="dialog_no_saved">Inget spel är sparat. Om du kan läsa detta meddelande så är I största fall något fel.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Avbryt</string>
     <string name="dialog_about_title">Om Lexica</string>

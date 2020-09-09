@@ -43,7 +43,6 @@
     <string name="dialog_about_title">लेक्सिका बद्दल</string>
     <string name="dialog_cancel">रद्द</string>
     <string name="dialog_ok">ठीक</string>
-    <string name="dialog_no_saved">कोणताही गेम जतन केलेला नाही. आपण हा संदेश वाचू शकत असाल तर काहीतरी बिघडलेले असल्याची शक्यता आहे.</string>
     <string name="pref_sounds_summary">ध्वनी प्रभाव सक्षम आहेत की नाही</string>
     <string name="pref_sounds">ध्वनी सक्षम केला</string>
     <string name="hint_both">दोन्ही</string>

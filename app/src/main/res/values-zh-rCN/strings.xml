@@ -22,7 +22,6 @@
     <string name="time_30m">30分钟</string>
     <string name="pref_sounds">音效</string>
     <string name="pref_sounds_summary">选择游戏会否发出音效</string>
-    <string name="dialog_no_saved">没有保存游戏。如果您看到此信息，游戏很可能出现了问题。</string>
     <string name="dialog_ok">确定</string>
     <string name="dialog_cancel">取消</string>
     <string name="dialog_about_title">关于Lexica</string>

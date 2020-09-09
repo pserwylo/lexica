@@ -22,7 +22,6 @@
     <string name="time_30m">30 minutes</string>
     <string name="pref_sounds">Effets sonores</string>
     <string name="pref_sounds_summary">Activer ou désactiver les effets sonores</string>
-    <string name="dialog_no_saved">Il n\'y a pas de sauvegarde. Si vous pouvez lire ce message, il y a probablement un bug.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Annuler</string>
     <string name="dialog_about_title">À propos de Lexica</string>

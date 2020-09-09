@@ -37,7 +37,6 @@
     <string name="letter_points">Betűpontok</string>
     <string name="pref_sounds">Hangok engedélyezve</string>
     <string name="pref_sounds_summary">A hangok legyenek-e engedélyezve vagy sem</string>
-    <string name="dialog_no_saved">Nincs mentett játék. Ha el tudja olvasni ezt az üzenetet, akkor valószínűleg valami elromlott.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Mégse</string>
     <string name="dialog_about_title">A Lexica névjegye</string>
