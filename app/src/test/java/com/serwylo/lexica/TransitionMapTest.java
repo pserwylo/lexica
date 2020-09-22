@@ -53,8 +53,8 @@ public class TransitionMapTest {
     @Test
     public void stringTransitionTest() throws IOException {
         byte[] serialized = serializedUsTrie(new StringTrie(new EnglishUS()));
-        Trie trie = new StringTrie.Deserializer().deserialize(new ByteArrayInputStream(serialized), BOARD, new EnglishUS());
-        Map<String, List<Solution>> actualSolutions = trie.solver(BOARD, new WordFilter.MinLength(3));
+        Trie trie = new StringTrie.Deserializer().deserialize(new ByteArrayInputStream(serialized), BOARD, new EnglishUS(), true);
+        Map<String, List<Solution>> actualSolutions = trie.solver(BOARD, new WordFilter.MinLength(3), true);
         assertSolutions(actualSolutions);
     }
 

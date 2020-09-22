@@ -1,7 +1,10 @@
 package com.serwylo.lexica.lang;
 
+import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -43,6 +46,44 @@ public abstract class Language {
 
     protected abstract Map<String, Integer> getLetterPoints();
 
+    private static HashMap<String, List<String>> normalizedMap;
+
+    /**
+     * Default implementation uses the Java {@link Normalizer} to decompose unicode characters and remove all but the
+     * first character. This is a bit of a naive normalisation, so make sure to override this if a language requires
+     * something more interesting or useful.
+     */
+    protected Map<String, List<String>> getNormalizedChars() {
+        if (normalizedMap == null) {
+            normalizedMap = new HashMap<>();
+            for (String letter : getLetterPoints().keySet()) {
+
+                if (!Normalizer.isNormalized(letter, Normalizer.Form.NFKD)) {
+                    String normalized = Normalizer.normalize(letter, Normalizer.Form.NFKD);
+                    normalizedMap.put(letter, Collections.singletonList(String.valueOf(normalized.charAt(0))));
+                }
+            }
+        }
+
+        return normalizedMap;
+    }
+
+    public List<String> lettersWhichNormalizeTo(String normalizedValue) {
+        List<String> denormalizedValues = new ArrayList<>();
+
+        if (getLetterPoints().containsKey(normalizedValue)) {
+            denormalizedValues.add(normalizedValue);
+        }
+
+        for (Map.Entry<String, List<String>> entry : getNormalizedChars().entrySet()) {
+            if (entry.getValue().contains(normalizedValue)) {
+                denormalizedValues.add(entry.getKey());
+            }
+        }
+
+        return denormalizedValues;
+    }
+
     /**
      * Beta languages are those which have not been properly play tested.
      * When adding a new language, override and return true to show feedback to the user that the
@@ -50,6 +91,26 @@ public abstract class Language {
      */
     public boolean isBeta() {
         return false;
+    }
+
+    /**
+     * @return Returns null if the value is already normalized.
+     */
+    public final List<String> maybeNormalize(String value) {
+        return getNormalizedChars().get(value);
+    }
+
+    /**
+     * Always returns a list. If already normalized, returns a list containing a single value: The value we asked to
+     * normalize.
+     */
+    public final List<String> normalize(String value) {
+        List<String> values = maybeNormalize(value);
+        if (values != null) {
+            return values;
+        }
+
+        return Collections.singletonList(value);
     }
 
     /**

@@ -17,10 +17,10 @@ public abstract class Trie implements WordFilter {
 
     public abstract void addWord(String w);
 
-    public abstract boolean isWord(String w);
+    public abstract boolean isWord(String w, boolean strict);
 
     public abstract void write(OutputStream out) throws IOException;
 
-    public abstract Map<String, List<Solution>> solver(TransitionMap m, WordFilter filter);
+    public abstract Map<String, List<Solution>> solver(TransitionMap m, WordFilter filter, boolean strict);
 
 }

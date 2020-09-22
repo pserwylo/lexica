@@ -38,6 +38,7 @@ import com.serwylo.lexica.lang.Language;
 import net.healeys.trie.Solution;
 import net.healeys.trie.StringTrie;
 import net.healeys.trie.Trie;
+import net.healeys.trie.WordFilter;
 
 import java.io.IOException;
 import java.util.Date;
@@ -51,6 +52,7 @@ import java.util.Map;
 
 public class Game implements Synchronizer.Counter {
 
+    public static final String STRICT_MATCHING = "strictMatching";
     public static final String HINT_MODE = "hintMode";
     public static final String SCORE_TYPE = "scoreType";
     public static final String SCORE_WORDS = "W";
@@ -66,6 +68,7 @@ public class Game implements Synchronizer.Counter {
     private int score;
     private String scoreType;
     private String hintMode;
+    private boolean strictMatching;
 
     public enum GameStatus {GAME_STARTING, GAME_RUNNING, GAME_PAUSED, GAME_FINISHED}
 
@@ -271,6 +274,7 @@ public class Game implements Synchronizer.Counter {
         }
         scoreType = prefs.getString(SCORE_TYPE, SCORE_WORDS);
         hintMode = prefs.getString(HINT_MODE, "hint_none");
+        strictMatching = prefs.getBoolean(STRICT_MATCHING, true);
     }
 
     public void initializeDictionary() {
@@ -281,9 +285,9 @@ public class Game implements Synchronizer.Counter {
         try {
             String trieFileName = language.getTrieFileName();
             int id = context.getResources().getIdentifier("raw/" + trieFileName.substring(0, trieFileName.lastIndexOf('.')), null, context.getPackageName());
-            Trie dict = new StringTrie.Deserializer().deserialize(context.getResources().openRawResource(id), board, language);
+            Trie dict = new StringTrie.Deserializer().deserialize(context.getResources().openRawResource(id), board, language, strictMatching);
 
-            solutions = dict.solver(board, w -> w.length() >= minWordLength);
+            solutions = dict.solver(board, new WordFilter.MinLength(minWordLength), strictMatching);
 
             Log.d(TAG, "Initializing " + language.getName() + " dictionary");
             for (String word : solutions.keySet()) {

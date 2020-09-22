@@ -71,24 +71,24 @@ public class StringTrie extends Trie {
             }
         }
 
-        boolean contains(String from) {
+        boolean contains(String from, boolean strict) {
             return transitions.containsKey(from);
         }
 
-        boolean canTransition(String from, String to) {
+        boolean canTransition(String from, String to, boolean strict) {
             Set<String> transitionTo = transitions.get(from);
             return transitionTo != null && transitionTo.contains(to);
         }
     }
 
-    private StringTrie(Language language, InputStream in, TransitionMap transitionMap) throws IOException {
+    private StringTrie(Language language, InputStream in, TransitionMap transitionMap, boolean strict) throws IOException {
         super(language);
 
         Set<String> availableStrings = new HashSet<>(transitionMap.getSize());
         for (int i = 0; i < transitionMap.getSize(); i++) {
             availableStrings.add(transitionMap.valueAt(i));
         }
-        rootNode = new Node(new DataInputStream(new BufferedInputStream(in)), language, new CheapTransitionMap(transitionMap), availableStrings, false, null, 0);
+        rootNode = new Node(new DataInputStream(new BufferedInputStream(in)), language, strict, new CheapTransitionMap(transitionMap), availableStrings, false, null, 0);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class StringTrie extends Trie {
     }
 
     @Override
-    public boolean isWord(String word) {
-        return rootNode.isAnyWord(word, 0);
+    public boolean isWord(String word, boolean strict) {
+        return rootNode.isAnyWord(word, strict, 0);
     }
 
     @Override
@@ -126,11 +126,11 @@ public class StringTrie extends Trie {
         }
     }
 
-    private void recursiveSolver(TransitionMap transitions, WordFilter wordFilter, StringTrie.Node node, int pos, Set<Integer> usedPositions, StringBuilder prefix, Map<String, List<Solution>> solutions, List<Integer> solution) {
+    private void recursiveSolver(TransitionMap transitions, WordFilter wordFilter, StringTrie.Node node, int pos, boolean strict, Set<Integer> usedPositions, StringBuilder prefix, Map<String, List<Solution>> solutions, List<Integer> solution) {
 
         if (node.word()) {
             String w = new String(prefix);
-            if (wordFilter == null || wordFilter.isWord(w)) {
+            if (wordFilter == null || wordFilter.isWord(w, strict)) {
                 Integer[] solutionArray = new Integer[solution.size()];
                 solution.toArray(solutionArray);
                 List<Solution> sols = solutions.get(w);
@@ -165,15 +165,15 @@ public class StringTrie extends Trie {
                 }
 
                 String valueAt = transitions.valueAt(toPosition);
-                StringTrie.Node nextNode = node.maybeChildAt(valueAt);
-                if (nextNode == null) {
+                List<StringTrie.Node> nextNode = node.maybeChildAt(valueAt, strict);
+                if (nextNode.size() == 0) {
                     continue;
                 }
 
                 prefix.append(valueAt);
 
                 solution.add(toPosition);
-                recursiveSolver(transitions, wordFilter, nextNode, toPosition, usedPositions, prefix, solutions, solution);
+                recursiveSolver(transitions, wordFilter, nextNode.get(0) /* TODO */, toPosition, strict, usedPositions, prefix, solutions, solution);
                 solution.remove(solution.size() - 1);
 
                 prefix.delete(prefix.length() - valueAt.length(), prefix.length());
@@ -184,7 +184,7 @@ public class StringTrie extends Trie {
     }
 
     @Override
-    public Map<String, List<Solution>> solver(TransitionMap transitions, WordFilter filter) {
+    public Map<String, List<Solution>> solver(TransitionMap transitions, WordFilter filter, boolean strict) {
 
         Map<String, List<Solution>> solutions = new TreeMap<>();
         StringBuilder prefix = new StringBuilder(transitions.getSize() + 1);
@@ -193,18 +193,35 @@ public class StringTrie extends Trie {
         for (int i = 0; i < transitions.getSize(); i++) {
             String value = transitions.valueAt(i);
 
-            StringTrie.Node nextNode = rootNode.maybeChildAt(value);
-            if (nextNode == null) {
-                continue;
+            List<String> lettersWhichNormalizeTo;
+
+            if (!strict) {
+                // we have a letter on our board, but when we ask for a node which matches, we need to ask the language
+                // to do the reverse of normalization, whereby it will tell us which potential strings normalize to this value
+                lettersWhichNormalizeTo = language.lettersWhichNormalizeTo(value);
+
+            } else {
+
+                lettersWhichNormalizeTo = Collections.singletonList(value);
+
             }
 
-            prefix.append(value);
-            positions.add(i);
+            for (String letter : lettersWhichNormalizeTo) {
 
-            recursiveSolver(transitions, filter, nextNode, i, new HashSet<>(), prefix, solutions, positions);
+                List<StringTrie.Node> nextNode = rootNode.maybeChildAt(letter, strict);
+                if (nextNode.size() == 0) {
+                    continue;
+                }
 
-            positions.remove(positions.size() - 1);
-            prefix.delete(prefix.length() - value.length(), prefix.length());
+                prefix.append(letter);
+                positions.add(i);
+
+                recursiveSolver(transitions, filter, nextNode.get(0) /* TODO */, i, strict, new HashSet<>(), prefix, solutions, positions);
+
+                positions.remove(positions.size() - 1);
+                prefix.delete(prefix.length() - letter.length(), prefix.length());
+
+            }
         }
 
         return solutions;
@@ -220,7 +237,7 @@ public class StringTrie extends Trie {
             super(language);
         }
 
-        private Node(DataInputStream input, Language language, CheapTransitionMap transitionMap, Set<String> availableStrings, boolean shouldSkip, String lastChar, int depth) throws IOException {
+        private Node(DataInputStream input, Language language, boolean strict, CheapTransitionMap transitionMap, Set<String> availableStrings, boolean shouldSkip, String lastChar, int depth) throws IOException {
             super(language);
 
             int nodeSizeInBytes = input.readInt();
@@ -243,7 +260,7 @@ public class StringTrie extends Trie {
                     input.readFully(bytes);
 
                     String string = new String(bytes);
-                    if (depth == 0 && transitionMap.contains(string) || depth > 0 && transitionMap.canTransition(lastChar, string)) {
+                    if (depth == 0 && transitionMap.contains(string, strict) || depth > 0 && transitionMap.canTransition(lastChar, string, strict)) {
                         childStrings[i] = string;
                     }
                 }
@@ -252,7 +269,7 @@ public class StringTrie extends Trie {
                     // Need to read the node regardless of whether we end up keeping it. This is to
                     // ensure that we traverse the InputStream in the right order.
                     boolean shouldSkipChild = childStrings[i] == null;
-                    Node childNode = new Node(input, language, transitionMap, availableStrings, shouldSkipChild, childStrings[i], depth + 1);
+                    Node childNode = new Node(input, language, strict, transitionMap, availableStrings, shouldSkipChild, childStrings[i], depth + 1);
                     if (!shouldSkipChild) {
                         children.put(childStrings[i], childNode);
                     }
@@ -314,6 +331,14 @@ public class StringTrie extends Trie {
         }
 
         /**
+         * @see StringTrie.Node#maybeChildAt(String, boolean)
+         */
+        private List<Node> maybeChildAt(String word, boolean strict, int position) {
+            String character = getCharAt(word, position);
+            return maybeChildAt(character, strict);
+        }
+
+        /**
          * Perhaps return multiple children, to deal with the normalization of unicode characters with diacritics.
          * <p>
          * For example, if we search for the letter "e", then we want to return Trie nodes for both "e" and "é" if they
@@ -321,9 +346,7 @@ public class StringTrie extends Trie {
          *
          * @param strict If true, only return a single node with exact matching diacritics (if any).
          */
-        private List<Node> maybeChildAt(String word, int position, boolean strict) {
-            String character = getCharAt(word, position);
-
+        private List<Node> maybeChildAt(String character, boolean strict) {
             if (strict) {
                 Node node = children.get(character);
                 return node == null ? new ArrayList<>() : Collections.singletonList(node);
@@ -331,13 +354,19 @@ public class StringTrie extends Trie {
 
             List<Node> nodes = new ArrayList<>(2);
 
+            // When using non-strict matching, searching based on one letter may return multiple results (e.g. if there
+            // are multiple diacritics that can be applied to the letter in a particular language). Therefore, we can't
+            // just ask for the specific letter like above, instead we need to iterate over all children and pick all
+            // that match.
             for (String c : children.keySet()) {
+                we get the letter "e" from the board, which could match multiple different variants with different diacritics,
+                therefore we need to ask the language for all potential matches (using lettersThaatNormalizeTo...).
+                I THINK.
                 if (c.equals(character)) {
                     nodes.add(children.get(c));
-                } else if (!Normalizer.isNormalized(c, Normalizer.Form.NFKD)) {
-                    String normalized = Normalizer.normalize(c, Normalizer.Form.NFKD);
-                    char letter = normalized.charAt(0);
-                    if (letter == character.charAt(0)) {
+                } else {
+                    List<String> potentialDecompositions = language.maybeNormalize(c);
+                    if (potentialDecompositions != null && potentialDecompositions.get(0).equals(character)) {
                         nodes.add(children.get(c));
                     }
                 }
@@ -346,13 +375,9 @@ public class StringTrie extends Trie {
             return nodes;
         }
 
-        private Node maybeChildAt(String childChar) {
-            return children.get(childChar);
-        }
-
         private Node ensureChildAt(String word, int position) {
             String character = getCharAt(word, position);
-            List<Node> existingNode = maybeChildAt(word, position, true);
+            List<Node> existingNode = maybeChildAt(word, true, position);
             if (existingNode.size() == 0) {
                 Node node = new Node(language);
                 children.put(character, node);
@@ -372,14 +397,14 @@ public class StringTrie extends Trie {
             return children.size() == 0;
         }
 
-        private boolean isAnyWord(String word, int currentPosition) {
+        private boolean isAnyWord(String word, boolean strict, int currentPosition) {
             if (currentPosition == word.length()) {
                 return isWord;
             }
 
-            List<Node> childNodes = maybeChildAt(word, currentPosition, false);
+            List<Node> childNodes = maybeChildAt(word, strict, currentPosition);
             for (Node child : childNodes) {
-                if (child.isAnyWord(word, nextPosition(word, currentPosition))) {
+                if (child.isAnyWord(word, strict, nextPosition(word, currentPosition))) {
                     return true;
                 }
             }
@@ -395,8 +420,8 @@ public class StringTrie extends Trie {
 
     public static class Deserializer implements net.healeys.trie.Deserializer<StringTrie> {
         @Override
-        public StringTrie deserialize(InputStream stream, TransitionMap transitionMap, Language language) throws IOException {
-            return new StringTrie(language, stream, transitionMap);
+        public StringTrie deserialize(InputStream stream, TransitionMap transitionMap, Language language, boolean strict) throws IOException {
+            return new StringTrie(language, stream, transitionMap, strict);
         }
     }
 

@@ -27,9 +27,9 @@ public class BoardTransitionTest {
         StringTrie trie = new StringTrie(new Persian());
         trie.addWord("وزغهایمان");
 
-        TrieTest.assertTrieMatches("Contains Persian word وزغهایمان", trie, new String[]{"وزغهایمان"}, new String[]{"non Persian word"});
+        TrieTest.assertTrieMatches("Contains Persian word وزغهایمان", trie, new String[]{"وزغهایمان"}, new String[]{"non Persian word"}, true);
 
-        Map<String, List<Solution>> solutions = trie.solver(new FourByFourBoard(board), new WordFilter.MinLength(3));
+        Map<String, List<Solution>> solutions = trie.solver(new FourByFourBoard(board), new WordFilter.MinLength(3), true);
         assertEquals(1, solutions.size());
     }
 

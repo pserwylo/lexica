@@ -93,12 +93,12 @@ public class FullUsGbTrieTest extends TrieTest {
     public void testLoadingCompressedTries() throws IOException {
         Language language = new EnglishUS();
         InputStream stream = FullUsGbTrieTest.class.getClassLoader().getResourceAsStream(language.getTrieFileName());
-        Trie trie = new StringTrie.Deserializer().deserialize(stream, BOARD, language);
+        Trie trie = new StringTrie.Deserializer().deserialize(stream, BOARD, language, true);
         assertTrieCorrect(trie);
     }
 
     private static void assertTrieCorrect(Trie trie) {
-        Map<String, List<Solution>> solutions = trie.solver(BOARD, new WordFilter.MinLength(3));
+        Map<String, List<Solution>> solutions = trie.solver(BOARD, new WordFilter.MinLength(3), true);
         List<String> expectedWords = new ArrayList<>();
         Collections.addAll(expectedWords, WORDS);
 
@@ -135,10 +135,10 @@ public class FullUsGbTrieTest extends TrieTest {
     public void testSolverPerformance() throws IOException {
         Language language = new EnglishUS();
         InputStream stream = FullUsGbTrieTest.class.getClassLoader().getResourceAsStream(language.getTrieFileName());
-        Trie trie = new StringTrie.Deserializer().deserialize(stream, BOARD, language);
-        assertEquals(40, trie.solver(BOARD, new WordFilter.MinLength(3)).size());
+        Trie trie = new StringTrie.Deserializer().deserialize(stream, BOARD, language, true);
+        assertEquals(40, trie.solver(BOARD, new WordFilter.MinLength(3), true).size());
         long startTime = System.currentTimeMillis();
-        trie.solver(BOARD, new WordFilter.MinLength(3));
+        trie.solver(BOARD, new WordFilter.MinLength(3), true);
         long totalTime = (System.currentTimeMillis() - startTime);
         fail("Took " + totalTime + "ms");
     }
@@ -155,7 +155,7 @@ public class FullUsGbTrieTest extends TrieTest {
 
         addWords(trie, words);
 
-        assertTrieMatches("After adding entire US dictionary to a new Trie", trie, words, null);
+        assertTrieMatches("After adding entire US dictionary to a new Trie", trie, words, null, true);
     }
 
     @Test
@@ -170,7 +170,7 @@ public class FullUsGbTrieTest extends TrieTest {
 
         addWords(trie, words);
 
-        assertTrieMatches("After adding entire GB dictionary to a new Trie", trie, words, null);
+        assertTrieMatches("After adding entire GB dictionary to a new Trie", trie, words, null, true);
     }
 
     static String[] readDictionary(Language language) {

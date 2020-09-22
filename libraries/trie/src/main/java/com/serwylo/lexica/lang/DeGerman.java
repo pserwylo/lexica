@@ -1,12 +1,14 @@
 package com.serwylo.lexica.lang;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class DeGerman extends Language {
 
-    private static Map<String, Integer> letterPoints = new HashMap<>();
+    private static final Map<String, Integer> letterPoints = new HashMap<>();
 
     static {
         letterPoints.put("e", 1);
@@ -50,6 +52,20 @@ public class DeGerman extends Language {
         // ß and œ are not used in Scrabble https://en.wikipedia.org/wiki/Scrabble_letter_distributions#German
         letterPoints.put("ß", 1);
         letterPoints.put("œ", 1);
+    }
+
+    private static final Map<String, List<String>> NORMALIZED_CHARS = new HashMap<>();
+
+    static {
+        NORMALIZED_CHARS.put("ä", Arrays.asList("a", "e"));
+        NORMALIZED_CHARS.put("ö", Arrays.asList("o", "e"));
+        NORMALIZED_CHARS.put("ü", Arrays.asList("u", "e"));
+        NORMALIZED_CHARS.put("ß", Arrays.asList("s", "s"));
+    }
+
+    @Override
+    protected Map<String, List<String>> getNormalizedChars() {
+        return NORMALIZED_CHARS;
     }
 
     @Override

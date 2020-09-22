@@ -27,9 +27,10 @@ public interface WordFilter {
      * @param    word    A string of characters believed to be a word
      * @return Whether or not the string is a word
      */
-    boolean isWord(String word);
+    boolean isWord(String word, boolean strict);
 
     class MinLength implements WordFilter {
+
         private final int minLength;
 
         public MinLength(int minLength) {
@@ -37,8 +38,9 @@ public interface WordFilter {
         }
 
         @Override
-        public boolean isWord(String word) {
+        public boolean isWord(String word, boolean strict) {
             return word != null && word.length() >= minLength;
         }
+
     }
 }
