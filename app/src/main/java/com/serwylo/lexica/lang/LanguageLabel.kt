@@ -27,7 +27,7 @@ object LanguageLabel {
         // by their internationalised name.
         val languagesWithLabels = Language.allLanguages
                 .values
-                .associateBy { LanguageLabel.getLabel(context, it) }
+                .associateBy { getLabel(context, it) }
 
         return languagesWithLabels
                 .keys

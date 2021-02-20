@@ -9,14 +9,14 @@ This is not meant to be comprehensive, but it should at least touch on the main 
 * [ ] **Add a dictionary file** - `./add-lang.sh de DE` (will require the relevant GNU ASpell library to be installed)
 * [ ] **Attribute dictionary source** - Add a relevant `assets/dictionaries/dictionary.*.LICENSE` file
 * [ ] **Make Gradle aware of the language** - Add `"de_DE",` to the `languages` array in `build.gradle`
-* [ ] **Generate a trie representation of the dictionary** - `./gradlew buildDictionary_de`
+* [ ] **Generate a trie representation of the dictionary** - `./gradlew buildDictionary_de_DE`
 * [ ] **Subclass `Language`** - Add it to the `libraries/trie` library
-* [ ] **Tell Lexica about your `Language` class** - Add an entry to `Language#getAllLanguages()`
-* [ ] **Generate random letter distributions** - `./gradlew analyseLanguage_de` (saves distributions to `/tmp`)
+* [ ] **Tell Lexica about your `Language` class** - Add an entry to the `Language#allLanguages` map
+* [ ] **Generate random letter distributions** - `./gradlew analyseLanguage_de_DE` (saves distributions to `/tmp`)
 * [ ] **Choose "best" distribution** - Typically the highest "score", but boards with low min or median scores are generally poor)
 * [ ] **Rename the distribution file** - `letters_LANG.txt`, e.g. `letters_de_DE.txt`
 * [ ] **Copy to project** - The renamed file should exist in `app/src/test/resources/` and `app/src/main/res/raw/`
-* [ ] **Add language name (in English)** - Edit `donottranslate.xml`, adding to `dict_choices_entryvalues` and `dict_choices_entries` (the latter will also require an entry in `strings.xml`)
+* [ ] **Add language name (in English)** - Edit `strings.xml`, adding `pref_dict_LANG`, e.g. `pref_dict_de_DE.txt`
 * [ ] **Add scrabble scores** - Edit your `Language` subclass, adding letter scores from [Wikipedia - Scrabble letter distributions](https://en.wikipedia.org/wiki/Scrabble_letter_distributions)
 * [ ] **Run tests** - `./gradlew check && ./gradlew connectedCheck`
 

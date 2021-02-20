@@ -11,6 +11,7 @@ public class TrieBuilderApp {
     public static void main(String[] args) throws IOException {
         if (args.length < 3) {
             printUsage();
+            System.exit(1);
             return;
         }
 
@@ -19,18 +20,21 @@ public class TrieBuilderApp {
             language = Language.from(args[0]);
         } catch (Language.NotFound e) {
             System.out.println(e.getMessage());
+            System.exit(1);
             return;
         }
 
         final File dictDir = new File(args[1]);
         if (!dictDir.exists()) {
             printFileNotFound(dictDir);
+            System.exit(1);
             return;
         }
 
         final File dictFile = new File(dictDir, language.getDictionaryFileName());
         if (!dictFile.exists()) {
             printFileNotFound(dictFile);
+            System.exit(1);
             return;
         }
 
@@ -40,6 +44,7 @@ public class TrieBuilderApp {
             File file = new File(args[i + 2]);
             if (!file.exists()) {
                 printFileNotFound(file);
+                System.exit(1);
                 return;
             }
 
