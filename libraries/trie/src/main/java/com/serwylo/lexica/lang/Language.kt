@@ -103,6 +103,7 @@ abstract class Language {
                 "ca" to Catalan(),
                 "de_DE" to DeGerman(),
                 "en_GB" to EnglishGB(),
+                "en_GB_top1000" to EnglishGBTop1000(),
                 "en_US" to EnglishUS(),
                 "es" to Spanish(),
                 "fa" to Persian(),

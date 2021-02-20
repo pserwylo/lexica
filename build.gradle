@@ -48,6 +48,7 @@ def languages = [
   "ca",
   "de_DE",
   "en_US",
+  "en_GB_top1000",
   "en_GB",
   "es",
   "fa",

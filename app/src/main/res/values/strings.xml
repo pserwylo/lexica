@@ -20,6 +20,7 @@
     <string name="pref_dict_en_GB" tools:keep="@string/pref_dict_en_GB">English (UK)</string>
     <string name="pref_dict_uk" tools:keep="@string/pref_dict_uk">Ukrainian</string>
     <string name="pref_dict_en_US" tools:keep="@string/pref_dict_en_US">English (US)</string>
+    <string name="pref_dict_en_GB_top1000" tools:keep="@string/pref_dict_en_GB_top1000">English (UK) - Top 1000</string>
     <string name="lexicon_is_in_beta">Beta</string>
     <string name="pref_boardSize">Board Size</string>
     <string name="pref_timeLimit">Time Limit</string>
