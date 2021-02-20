@@ -104,6 +104,7 @@ abstract class Language {
                 "de_DE" to DeGerman(),
                 "en_GB" to EnglishGB(),
                 "en_US" to EnglishUS(),
+                "en_US_AtoK" to EnglishUSAtoK(),
                 "es" to Spanish(),
                 "fa" to Persian(),
                 "fr_FR" to French(),

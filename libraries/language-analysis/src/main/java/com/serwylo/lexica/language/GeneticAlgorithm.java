@@ -39,7 +39,7 @@ public class GeneticAlgorithm {
      * fresh run with new random genomes this many times.
      */
     private static final int SEPARATE_RUNS = 5;
-    private static final int ITERATIONS = 1000;
+    private static final int ITERATIONS = 100;
     private static final int NUM_OF_GENOMES = 20;
     private static final int FITNESS_CALC_BOARDS_TO_GENERATE = 100;
     private static final double RATE_OF_MUTATION = 0.05;
