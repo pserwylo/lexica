@@ -13,21 +13,79 @@ tests_apk_path('app/build/outputs/apk/androidTest/debug/app-debug-androidTest.ap
 # Note, for some reason "ca" and "fi" always seem to fail and produce weird output.
 # If that happens, just comment out other languages and then regenerate (but careful of clear_previous_screenshots)
 # Also manually changed the language codes for the following, so that they will work with the play store:
-#   el -> el-GR
+#   ar -> ar
+#   bg -> bg
+#   bn -> bn-BD
+#   ca -> ca-CZ
+#   cs -> cs
+#   da -> da-DK
 #   de -> de-DE
+#   el -> el-GR
+#   eo -> eo
+#   es -> es-ES
+#   et -> et
+#   fa -> fa
 #   fi -> fi-FI
 #   fr -> fr-FR
+#   he -> he
+#   hi -> hi-IN
+#   hr -> hr
 #   hu -> hu-HU
 #   it -> it-IT
 #   ja -> ja-JP
+#   mr -> mr-IN
+#   nb -> nb-rNO
 #   nl -> nl-NL
 #   pl -> pl-PL
 #   pt -> pt-PT (should probably create both pt-PT and pt-BR)
+#   ro -> ro
 #   ru -> ru-RU
+#   sa -> sat
+#   sk -> sk
 #   sv -> sv-SE
+#   th -> th
 #   tr -> tr-TR
-#   zh -> zh-CN (should probably create both zh-CN and zh-TW - and zh-HK if available)
-locales(['zh-CN','uk','tr-TR','sv-SE','ru-RU','pt-PT','pl-PL','nl-NL','nb','ja-JP','it-IT','hu-HU','hr','fr-FR','fi-FI','en-US','el-GR','de-DE','ca'])
+#   uk -> uk
+#   zh -> zh-CN
+#   zh -> zh-TW
+
+locales([
+    "ar",
+    "bg",
+    "bn-BD",
+    "ca",
+    "cs-CZ",
+    "da-DK",
+    "de-DE",
+    "el-GR",
+    "eo",
+    "es-ES",
+    "et",
+    "fa",
+    "fi-FI",
+    "fr-FR",
+    "he",
+    "hi-IN",
+    "hr",
+    "hu-HU",
+    "it-IT",
+    "ja-JP",
+    "mr-IN",
+    "nb-rNO",
+    "nl-NL",
+    "pl-PL",
+    "pt-PT",
+    "ro",
+    "ru-RU",
+    "sat",
+    "sk",
+    "sv-SE",
+    "th",
+    "tr-TR",
+    "uk",
+    "zh-CN",
+    "zh-TW",
+])
 
 # clear all previously generated screenshots in your local output directory before creating new ones
 clear_previous_screenshots(true)

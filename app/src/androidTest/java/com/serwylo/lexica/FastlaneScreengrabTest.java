@@ -71,6 +71,16 @@ public class FastlaneScreengrabTest {
         Screengrab.screenshot("03_missed_words_light");
 
         back();
+        showGameModes();
+
+        Screengrab.screenshot("04_game_modes");
+
+        back();
+        showLexicons();
+
+        Screengrab.screenshot("04_lexicons");
+
+        back();
         showPreferences();
 
         Screengrab.screenshot("04_preferences");
@@ -89,6 +99,16 @@ public class FastlaneScreengrabTest {
 
     private void showPreferences() {
         ViewInteraction fancyButton = onView(allOf(withId(R.id.preferences), isDisplayed()));
+        fancyButton.perform(click());
+    }
+
+    private void showGameModes() {
+        ViewInteraction fancyButton = onView(allOf(withId(R.id.game_mode_button), isDisplayed()));
+        fancyButton.perform(click());
+    }
+
+    private void showLexicons() {
+        ViewInteraction fancyButton = onView(allOf(withId(R.id.language_button), isDisplayed()));
         fancyButton.perform(click());
     }
 
