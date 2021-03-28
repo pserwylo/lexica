@@ -16,31 +16,31 @@ tests_apk_path('app/build/outputs/apk/androidTest/debug/app-debug-androidTest.ap
 #   ar -> ar
 #   bg -> bg
 #   bn -> bn-BD
-#   ca -> ca-CZ
-#   cs -> cs
+#   ca -> ca
+#   cs -> cs-CZ
 #   da -> da-DK
 #   de -> de-DE
 #   el -> el-GR
-#   eo -> eo
+#   eo -> eo (Not supported on Google Play, but will be via F-Droid).
 #   es -> es-ES
 #   et -> et
 #   fa -> fa
 #   fi -> fi-FI
 #   fr -> fr-FR
-#   he -> he
+#   he -> he (Not supported on Google Play, but will be via F-Droid).
 #   hi -> hi-IN
 #   hr -> hr
 #   hu -> hu-HU
 #   it -> it-IT
 #   ja -> ja-JP
 #   mr -> mr-IN
-#   nb -> nb-rNO
+#   nb -> no-NO (Seems this is the only Norwegian supported by Play. Is it okay to do this?)
 #   nl -> nl-NL
 #   pl -> pl-PL
 #   pt -> pt-PT (should probably create both pt-PT and pt-BR)
 #   ro -> ro
 #   ru -> ru-RU
-#   sa -> sat
+#   sa -> sat (Not supported on Google Play, but will be via F-Droid).
 #   sk -> sk
 #   sv -> sv-SE
 #   th -> th
@@ -50,6 +50,8 @@ tests_apk_path('app/build/outputs/apk/androidTest/debug/app-debug-androidTest.ap
 #   zh -> zh-TW
 
 locales([
+    # "en",
+    
     "ar",
     "bg",
     "bn-BD",
@@ -88,7 +90,7 @@ locales([
 ])
 
 # clear all previously generated screenshots in your local output directory before creating new ones
-clear_previous_screenshots(true)
+clear_previous_screenshots(false)
 
 # For more information about all available options run
 #   fastlane screengrab --help
