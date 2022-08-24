@@ -29,4 +29,25 @@ jobs:
 
     - name: Gradle check
       run: ./gradlew check
+      
+    - name: Build debug version
+      uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: assembleDebug
 
+    - name: Sign debug .apk
+      uses: r0adkll/sign-android-release@v1
+      id: sign_app
+      with:
+        releaseDirectory: app/build/outputs/apk/debug
+        signingKeyBase64: ${{ secrets.DEBUG_SIGNING_KEY }}
+        alias: ${{ secrets.DEBUG_SIGNING_KEY_ALIAS }}
+        keyStorePassword: ${{ secrets.DEBUG_KEY_STORE_PASSWORD }}
+      env:
+        BUILD_TOOLS_VERSION: "29.0.3"
+        
+    - name: Upload signed debug app
+      uses: actions/upload-artifact@v2
+      with:
+        name: Signed debug apk
+        path: ${{steps.sign_app.outputs.signedReleaseFile}}
