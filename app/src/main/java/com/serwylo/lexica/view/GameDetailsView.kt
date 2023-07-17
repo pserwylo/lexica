@@ -10,6 +10,7 @@ import com.serwylo.lexica.databinding.GameDetailsBinding
 import com.serwylo.lexica.db.GameMode
 import com.serwylo.lexica.lang.Language
 import com.serwylo.lexica.lang.LanguageLabel
+import kotlin.math.sqrt
 
 class GameDetailsView @JvmOverloads constructor(
         context: Context,
