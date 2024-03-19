@@ -206,18 +206,23 @@ public class Game implements Synchronizer.Counter {
      *       many other things. This should be refactored so that it is more predictable what happens.
      */
     public static Game generateGame(@NonNull Context context, @NonNull GameMode gameMode, @NonNull Language language) {
+        long startMillis = System.currentTimeMillis();
+
         Game bestGame = new Game(context, gameMode, language, null);
+        int distanceFromIdeal = Math.abs(bestGame.getMaxWordCount() - language.getIdealWordsPerBoard());
         int numAttempts = 0;
-        while (bestGame.getMaxWordCount() < 45 && numAttempts < 5) {
-            Log.d(TAG, "Generating another board, because the previous one only had " + bestGame.getMaxWordCount() + " words, but we want at least 45. Will give up after 5 tries.");
+        while (numAttempts < 5) {
             Game nextAttempt = new Game(context, gameMode, language, null);
-            if (nextAttempt.getMaxWordCount() > bestGame.getMaxWordCount()) {
+            int nextDistanceFromIdeal = Math.abs(nextAttempt.getMaxWordCount() - language.getIdealWordsPerBoard());
+            if (nextDistanceFromIdeal < distanceFromIdeal) {
                 bestGame = nextAttempt;
+                distanceFromIdeal = nextDistanceFromIdeal;
             }
             numAttempts ++;
         }
 
-        Log.d(TAG, "Generated new board with " + bestGame.getMaxWordCount() + " words");
+        long timeTaken = System.currentTimeMillis() - startMillis;
+        Log.d(TAG, "Generated new " + language.getName() + " board with " + bestGame.getMaxWordCount() + " words after " + (numAttempts + 1) + " attempts in " + timeTaken + "ms. Was aiming for " + language.getIdealWordsPerBoard() + " words.");
         return bestGame;
     }
 

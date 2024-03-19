@@ -19,6 +19,18 @@ abstract class Language {
         get() = false
 
     /**
+     * When generating a board, try a few times to get one with close to this many words in it.
+     * Make it customisable per-language because some dictionaries may have more words than others.
+     *
+     * Might be worth making this customisable on a per-board-size level, to prevent big 6x6
+     * boards with only 200 words, but that can come later if wanted.
+     *
+     * See: https://github.com/lexica/lexica/issues/386 and https://github.com/lexica/lexica/issues/386.
+     */
+    open val idealWordsPerBoard: Int
+        get() = 200
+
+    /**
      * Converts a lowercase representation into something for display. For example, in the case
      * of an English "qu", it should probably be displayed with a capitol "Q" but lower case "u":
      * "Qu";
