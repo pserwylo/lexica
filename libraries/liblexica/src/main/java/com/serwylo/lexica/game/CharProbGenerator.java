@@ -85,16 +85,16 @@ public class CharProbGenerator {
         return Collections.unmodifiableList(letters);
     }
 
-    public FiveByFiveBoard generateFiveByFiveBoard() {
-        return new FiveByFiveBoard(generateBoard(25));
+    public FiveByFiveLetterGrid generateFiveByFiveBoard() {
+        return new FiveByFiveLetterGrid(generateBoard(25));
     }
 
-    public FourByFourBoard generateFourByFourBoard() {
-        return new FourByFourBoard(generateBoard(16));
+    public FourByFourLetterGrid generateFourByFourBoard() {
+        return new FourByFourLetterGrid(generateBoard(16));
     }
 
-    public SixBySixBoard generateSixBySixBoard() {
-        return new SixBySixBoard(generateBoard(36));
+    public SixBySixLetterGrid generateSixBySixBoard() {
+        return new SixBySixLetterGrid(generateBoard(36));
     }
 
     private String[] generateBoard(int size) {

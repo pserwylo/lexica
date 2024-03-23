@@ -1,7 +1,7 @@
 package com.serwylo.lexica;
 
-import com.serwylo.lexica.game.Board;
-import com.serwylo.lexica.game.FourByFourBoard;
+import com.serwylo.lexica.game.LetterGrid;
+import com.serwylo.lexica.game.FourByFourLetterGrid;
 import com.serwylo.lexica.lang.EnglishGB;
 import com.serwylo.lexica.lang.EnglishUS;
 import com.serwylo.lexica.lang.Language;
@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 
 public class FullUsGbTrieTest extends TrieTest {
 
-    private static final Board BOARD = new FourByFourBoard(new String[]{"r", "qu", "o", "s", "w", "n", "o", "a", "t", "v", "d", "g", "n", "p", "u", "i",});
+    private static final LetterGrid LETTER_GRID = new FourByFourLetterGrid(new String[]{"r", "qu", "o", "s", "w", "n", "o", "a", "t", "v", "d", "g", "n", "p", "u", "i",});
 
     private static final LinkedHashMap<String, Solution> SOLUTIONS = new LinkedHashMap<>();
 
@@ -93,12 +93,12 @@ public class FullUsGbTrieTest extends TrieTest {
     public void testLoadingCompressedTries() throws IOException {
         Language language = new EnglishUS();
         InputStream stream = FullUsGbTrieTest.class.getClassLoader().getResourceAsStream(language.getTrieFileName());
-        Trie trie = new StringTrie.Deserializer().deserialize(stream, BOARD, language);
+        Trie trie = new StringTrie.Deserializer().deserialize(stream, LETTER_GRID, language);
         assertTrieCorrect(trie);
     }
 
     private static void assertTrieCorrect(Trie trie) {
-        Map<String, List<Solution>> solutions = trie.solver(BOARD, new WordFilter.MinLength(3));
+        Map<String, List<Solution>> solutions = trie.solver(LETTER_GRID, new WordFilter.MinLength(3));
         List<String> expectedWords = new ArrayList<>();
         Collections.addAll(expectedWords, WORDS);
 
@@ -135,10 +135,10 @@ public class FullUsGbTrieTest extends TrieTest {
     public void testSolverPerformance() throws IOException {
         Language language = new EnglishUS();
         InputStream stream = FullUsGbTrieTest.class.getClassLoader().getResourceAsStream(language.getTrieFileName());
-        Trie trie = new StringTrie.Deserializer().deserialize(stream, BOARD, language);
-        assertEquals(40, trie.solver(BOARD, new WordFilter.MinLength(3)).size());
+        Trie trie = new StringTrie.Deserializer().deserialize(stream, LETTER_GRID, language);
+        assertEquals(40, trie.solver(LETTER_GRID, new WordFilter.MinLength(3)).size());
         long startTime = System.currentTimeMillis();
-        trie.solver(BOARD, new WordFilter.MinLength(3));
+        trie.solver(LETTER_GRID, new WordFilter.MinLength(3));
         long totalTime = (System.currentTimeMillis() - startTime);
         fail("Took " + totalTime + "ms");
     }

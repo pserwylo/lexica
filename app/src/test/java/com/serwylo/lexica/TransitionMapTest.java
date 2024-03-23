@@ -1,7 +1,7 @@
 package com.serwylo.lexica;
 
-import com.serwylo.lexica.game.Board;
-import com.serwylo.lexica.game.FourByFourBoard;
+import com.serwylo.lexica.game.FourByFourLetterGrid;
+import com.serwylo.lexica.game.LetterGrid;
 import com.serwylo.lexica.lang.EnglishUS;
 import com.serwylo.lexica.lang.Language;
 
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TransitionMapTest {
 
-    private static final Board BOARD = new FourByFourBoard(new String[]{"b", "e", "x", "x", "d", "a", "n", "x", "x", "r", "k", "x", "x", "x", "x", "x",});
+    private static final LetterGrid LETTER_GRID = new FourByFourLetterGrid(new String[]{"b", "e", "x", "x", "d", "a", "n", "x", "x", "r", "k", "x", "x", "x", "x", "x",});
 
     // Only a subset of all possible solutions.
     private static final LinkedHashMap<String, Solution> SOLUTIONS = new LinkedHashMap<>();
@@ -47,14 +47,14 @@ public class TransitionMapTest {
     }
 
     static int xy(int x, int y) {
-        return x + BOARD.getWidth() * y;
+        return x + LETTER_GRID.getWidth() * y;
     }
 
     @Test
     public void stringTransitionTest() throws IOException {
         byte[] serialized = serializedUsTrie(new StringTrie(new EnglishUS()));
-        Trie trie = new StringTrie.Deserializer().deserialize(new ByteArrayInputStream(serialized), BOARD, new EnglishUS());
-        Map<String, List<Solution>> actualSolutions = trie.solver(BOARD, new WordFilter.MinLength(3));
+        Trie trie = new StringTrie.Deserializer().deserialize(new ByteArrayInputStream(serialized), LETTER_GRID, new EnglishUS());
+        Map<String, List<Solution>> actualSolutions = trie.solver(LETTER_GRID, new WordFilter.MinLength(3));
         assertSolutions(actualSolutions);
     }
 

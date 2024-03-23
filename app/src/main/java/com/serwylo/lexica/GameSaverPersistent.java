@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 
 import com.serwylo.lexica.db.GameMode;
-import com.serwylo.lexica.game.Board;
+import com.serwylo.lexica.game.LetterGrid;
 import com.serwylo.lexica.game.Game;
 import com.serwylo.lexica.lang.Language;
 
@@ -87,12 +87,12 @@ public class GameSaverPersistent extends GameSaver {
     }
 
     @Override
-    public void save(Board board, long timeRemainingInMillis, GameMode gameMode, Language language, String wordListToString, int wordCount, Date start, Game.GameStatus status) {
+    public void save(LetterGrid letterGrid, long timeRemainingInMillis, GameMode gameMode, Language language, String wordListToString, int wordCount, Date start, Game.GameStatus status) {
 
         SharedPreferences.Editor prefs = getPrefs().edit();
         prefs.putString(GAME_MODE, gameMode.serialize());
         prefs.putString(LANGUAGE, language.getName());
-        prefs.putString(GAME_BOARD, board.toString());
+        prefs.putString(GAME_BOARD, letterGrid.toString());
         prefs.putLong(TIME_REMAINING_IN_MILLIS, timeRemainingInMillis);
         prefs.putString(WORDS, wordListToString);
         prefs.putInt(WORD_COUNT, wordCount);

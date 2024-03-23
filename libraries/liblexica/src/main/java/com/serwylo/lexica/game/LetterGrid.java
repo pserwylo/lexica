@@ -19,13 +19,11 @@ package com.serwylo.lexica.game;
 
 import net.healeys.trie.TransitionMap;
 
-import java.util.List;
-
-public abstract class Board implements TransitionMap {
+public abstract class LetterGrid implements TransitionMap {
     private String[] board;
     private Integer[] positions;
 
-    public Board(String[] b) {
+    public LetterGrid(String[] b) {
         board = b;
         positions = new Integer[getSize()];
         for (int i = 0; i < getSize(); i++) {

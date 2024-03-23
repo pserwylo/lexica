@@ -1,6 +1,6 @@
 package com.serwylo.lexica.language;
 
-import com.serwylo.lexica.game.Board;
+import com.serwylo.lexica.game.LetterGrid;
 import com.serwylo.lexica.game.CharProbGenerator;
 import com.serwylo.lexica.lang.Language;
 
@@ -51,10 +51,10 @@ public class Fitness {
     private static SummaryStatistics generateStats(File trieDir, CharProbGenerator charProbGenerator, Language language, int iterations) throws IOException {
         SummaryStatistics stats = new SummaryStatistics();
         for (int i = 0; i < iterations; i++) {
-            Board board = new CharProbGenerator(charProbGenerator).generateFourByFourBoard();
+            LetterGrid letterGrid = new CharProbGenerator(charProbGenerator).generateFourByFourBoard();
             InputStream stream = trieReader(trieDir, language);
-            Trie dict = new StringTrie.Deserializer().deserialize(stream, board, language);
-            int numWords = dict.solver(board, new WordFilter.MinLength(3)).size();
+            Trie dict = new StringTrie.Deserializer().deserialize(stream, letterGrid, language);
+            int numWords = dict.solver(letterGrid, new WordFilter.MinLength(3)).size();
             stats.addValue(numWords);
         }
         return stats;

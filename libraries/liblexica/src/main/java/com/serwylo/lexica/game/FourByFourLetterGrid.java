@@ -15,14 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.serwylo.lexica.game;
 
-public class FiveByFiveBoard extends Board {
-    private static final int SIZE = 25;
-    private static final int WIDTH = 5;
+public class FourByFourLetterGrid extends LetterGrid {
+    private static final int SIZE = 16;
+    private static final int WIDTH = 4;
 
-    public FiveByFiveBoard(String[] b) {
+    public FourByFourLetterGrid(String[] b) {
         super(b);
     }
 

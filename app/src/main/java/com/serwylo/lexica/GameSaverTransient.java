@@ -3,7 +3,7 @@ package com.serwylo.lexica;
 import android.os.Bundle;
 
 import com.serwylo.lexica.db.GameMode;
-import com.serwylo.lexica.game.Board;
+import com.serwylo.lexica.game.LetterGrid;
 import com.serwylo.lexica.game.Game;
 import com.serwylo.lexica.lang.Language;
 
@@ -74,8 +74,8 @@ public class GameSaverTransient extends GameSaver {
     }
 
     @Override
-    public void save(Board board, long timeRemainingInMillis, GameMode gameMode, Language language, String wordListToString, int wordCount, Date start, Game.GameStatus status) {
-        bundle.putString(GameSaver.GAME_BOARD, board.toString());
+    public void save(LetterGrid letterGrid, long timeRemainingInMillis, GameMode gameMode, Language language, String wordListToString, int wordCount, Date start, Game.GameStatus status) {
+        bundle.putString(GameSaver.GAME_BOARD, letterGrid.toString());
         bundle.putLong(GameSaver.TIME_REMAINING_IN_MILLIS, timeRemainingInMillis);
         bundle.putParcelable(GameSaver.GAME_MODE, gameMode);
         bundle.putString(GameSaver.LANGUAGE, language.getName());

@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import com.serwylo.lexica.db.GameMode;
-import com.serwylo.lexica.game.Board;
+import com.serwylo.lexica.game.LetterGrid;
 import com.serwylo.lexica.game.Game;
 import com.serwylo.lexica.lang.Language;
 
@@ -48,5 +48,5 @@ public abstract class GameSaver {
         return TextUtils.isEmpty(string) ? new String[]{} : string.split(",");
     }
 
-    public abstract void save(Board board, long timeRemainingInMillis, GameMode gameMode, Language language, String wordListToString, int wordCount, Date start, Game.GameStatus status);
+    public abstract void save(LetterGrid letterGrid, long timeRemainingInMillis, GameMode gameMode, Language language, String wordListToString, int wordCount, Date start, Game.GameStatus status);
 }

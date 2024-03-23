@@ -61,7 +61,7 @@ public class Game implements Synchronizer.Counter {
      */
     private long maxTimeSinceResumeInMillis;
 
-    private Board board;
+    private LetterGrid letterGrid;
     private int score;
 
     public enum GameStatus {GAME_STARTING, GAME_RUNNING, GAME_PAUSED, GAME_FINISHED}
@@ -124,13 +124,13 @@ public class Game implements Synchronizer.Counter {
         try {
             switch (gameMode.getBoardSize()) {
                 case 16:
-                    setBoard(context, new FourByFourBoard(saver.readGameBoard()));
+                    setBoard(context, new FourByFourLetterGrid(saver.readGameBoard()));
                     break;
                 case 25:
-                    setBoard(context, new FiveByFiveBoard(saver.readGameBoard()));
+                    setBoard(context, new FiveByFiveLetterGrid(saver.readGameBoard()));
                     break;
                 case 36:
-                    setBoard(context, new SixBySixBoard(saver.readGameBoard()));
+                    setBoard(context, new SixBySixLetterGrid(saver.readGameBoard()));
                     break;
             }
 
@@ -173,26 +173,26 @@ public class Game implements Synchronizer.Counter {
         String lettersFileName = language.getLetterDistributionFileName();
         int id = context.getResources().getIdentifier("raw/" + lettersFileName.substring(0, lettersFileName.lastIndexOf('.')), null, context.getPackageName());
         CharProbGenerator charProbs = new CharProbGenerator(context.getResources().openRawResource(id), getLanguage());
-        Board board;
+        LetterGrid letterGrid;
 
         switch (gameMode.getBoardSize()) {
             case 16:
-                board = boardLetters == null ? charProbs.generateFourByFourBoard() : new FourByFourBoard(boardLetters);
+                letterGrid = boardLetters == null ? charProbs.generateFourByFourBoard() : new FourByFourLetterGrid(boardLetters);
                 break;
 
             case 25:
-                board = boardLetters == null ? charProbs.generateFiveByFiveBoard() : new FiveByFiveBoard(boardLetters);
+                letterGrid = boardLetters == null ? charProbs.generateFiveByFiveBoard() : new FiveByFiveLetterGrid(boardLetters);
                 break;
 
             case 36:
-                board = boardLetters == null ? charProbs.generateSixBySixBoard() : new SixBySixBoard(boardLetters);
+                letterGrid = boardLetters == null ? charProbs.generateSixBySixBoard() : new SixBySixLetterGrid(boardLetters);
                 break;
 
             default:
                 throw new IllegalStateException("Board must be 16, 25, or 36 large");
         }
 
-        setBoard(context, board);
+        setBoard(context, letterGrid);
 
         timeRemainingInMillis = gameMode.getTimeLimitSeconds() * 1000L;
         maxTimeSinceResumeInMillis = gameMode.getTimeLimitSeconds() * 1000L;
@@ -261,8 +261,8 @@ public class Game implements Synchronizer.Counter {
         }
     }
 
-    private void setBoard(Context context, Board b) {
-        board = b;
+    private void setBoard(Context context, LetterGrid b) {
+        letterGrid = b;
         initializeDictionary(context);
     }
 
@@ -282,9 +282,9 @@ public class Game implements Synchronizer.Counter {
         try {
             String trieFileName = language.getTrieFileName();
             int id = context.getResources().getIdentifier("raw/" + trieFileName.substring(0, trieFileName.lastIndexOf('.')), null, context.getPackageName());
-            Trie dict = new StringTrie.Deserializer().deserialize(context.getResources().openRawResource(id), board, language);
+            Trie dict = new StringTrie.Deserializer().deserialize(context.getResources().openRawResource(id), letterGrid, language);
 
-            solutions = dict.solver(board, w -> w.length() >= gameMode.getMinWordLength());
+            solutions = dict.solver(letterGrid, w -> w.length() >= gameMode.getMinWordLength());
 
             Log.d(TAG, "Initializing " + language.getName() + " dictionary");
             for (String word : solutions.keySet()) {
@@ -357,7 +357,7 @@ public class Game implements Synchronizer.Counter {
     }
 
     public void save(GameSaver saver) {
-        saver.save(board, timeRemainingInMillis, gameMode, language, wordListToString(), wordCount, start, status);
+        saver.save(letterGrid, timeRemainingInMillis, gameMode, language, wordListToString(), wordCount, start, status);
     }
 
     public void start() {
@@ -491,8 +491,8 @@ public class Game implements Synchronizer.Counter {
         return solutions.containsKey(word);
     }
 
-    public Board getBoard() {
-        return board;
+    public LetterGrid getBoard() {
+        return letterGrid;
     }
 
     public long tick() {
@@ -541,7 +541,7 @@ public class Game implements Synchronizer.Counter {
     }
 
     public void rotateBoard() {
-        board.rotate();
+        letterGrid.rotate();
         if (mRotateHandler != null)
             mRotateHandler.onRotate();
     }

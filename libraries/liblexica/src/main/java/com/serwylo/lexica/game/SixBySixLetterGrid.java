@@ -18,11 +18,11 @@
 
 package com.serwylo.lexica.game;
 
-public class SixBySixBoard extends Board {
+public class SixBySixLetterGrid extends LetterGrid {
     private static final int SIZE = 36;
     private static final int WIDTH = 6;
 
-    public SixBySixBoard(String[] b) {
+    public SixBySixLetterGrid(String[] b) {
         super(b);
     }
 
