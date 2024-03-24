@@ -4,4 +4,5 @@ apply plugin: 'kotlin'
 dependencies {
     implementation project(':libraries:trie')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    testImplementation "junit:junit:4.13"
 }
