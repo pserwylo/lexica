@@ -71,8 +71,8 @@ class NewMultiplayerActivity : AppCompatActivity() {
         val language = Util().getSelectedLanguageOrDefault(this)
         val game = Game.generateGame(this, gameMode, language)
         val board = mutableListOf<String>()
-        for (i in 0 until game.board.size) {
-            board.add(game.board.elementAt(i))
+        for (i in 0 until game.letterGrid.size) {
+            board.add(game.letterGrid.elementAt(i))
         }
 
         val sharedGameData = SharedGameData(board, language, gameMode, SharedGameData.Type.MULTIPLAYER)

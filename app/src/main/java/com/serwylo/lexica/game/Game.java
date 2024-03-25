@@ -35,10 +35,7 @@ import com.serwylo.lexica.db.GameMode;
 import com.serwylo.lexica.lang.Language;
 
 import net.healeys.trie.Solution;
-import net.healeys.trie.StringTrie;
-import net.healeys.trie.Trie;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -61,7 +58,7 @@ public class Game implements Synchronizer.Counter {
      */
     private long maxTimeSinceResumeInMillis;
 
-    private LetterGrid letterGrid;
+    private Board board;
     private int score;
 
     public enum GameStatus {GAME_STARTING, GAME_RUNNING, GAME_PAUSED, GAME_FINISHED}
@@ -103,8 +100,6 @@ public class Game implements Synchronizer.Counter {
 
     private Date start;
 
-    private Map<String, List<Solution>> solutions;
-
     private AudioManager mgr;
     private SoundPool mSoundPool;
     private int[] sysSoundIds;
@@ -122,17 +117,7 @@ public class Game implements Synchronizer.Counter {
         loadSounds(context);
 
         try {
-            switch (gameMode.getBoardSize()) {
-                case 16:
-                    setBoard(context, new FourByFourLetterGrid(saver.readGameBoard()));
-                    break;
-                case 25:
-                    setBoard(context, new FiveByFiveLetterGrid(saver.readGameBoard()));
-                    break;
-                case 36:
-                    setBoard(context, new SixBySixLetterGrid(saver.readGameBoard()));
-                    break;
-            }
+            board = BoardKt.createBoard(context, language, saver.readGameBoard(), gameMode);
 
             timeRemainingInMillis = saver.readTimeRemainingInMillis();
             maxTimeSinceResumeInMillis = timeRemainingInMillis;
@@ -159,6 +144,10 @@ public class Game implements Synchronizer.Counter {
             Log.e(TAG, "Error Restoring Saved Game", e);
             status = GameStatus.GAME_FINISHED;
         }
+
+        if (!language.isBeta()) {
+            logSolutions();
+        }
     }
 
     public Game(Context context, GameMode gameMode, Language language, String[] boardLetters) {
@@ -170,35 +159,20 @@ public class Game implements Synchronizer.Counter {
 
         loadSounds(context);
 
-        String lettersFileName = language.getLetterDistributionFileName();
-        int id = context.getResources().getIdentifier("raw/" + lettersFileName.substring(0, lettersFileName.lastIndexOf('.')), null, context.getPackageName());
-        CharProbGenerator charProbs = new CharProbGenerator(context.getResources().openRawResource(id), getLanguage());
-        LetterGrid letterGrid;
-
-        switch (gameMode.getBoardSize()) {
-            case 16:
-                letterGrid = boardLetters == null ? charProbs.generateFourByFourBoard() : new FourByFourLetterGrid(boardLetters);
-                break;
-
-            case 25:
-                letterGrid = boardLetters == null ? charProbs.generateFiveByFiveBoard() : new FiveByFiveLetterGrid(boardLetters);
-                break;
-
-            case 36:
-                letterGrid = boardLetters == null ? charProbs.generateSixBySixBoard() : new SixBySixLetterGrid(boardLetters);
-                break;
-
-            default:
-                throw new IllegalStateException("Board must be 16, 25, or 36 large");
-        }
-
-        setBoard(context, letterGrid);
+        CharProbGenerator charProbs = BoardKt.loadCharProps(context, language);
+        board = boardLetters == null
+                ? BoardKt.createBoard(context, language, charProbs, gameMode)
+                : BoardKt.createBoard(context, language, boardLetters, gameMode);
 
         timeRemainingInMillis = gameMode.getTimeLimitSeconds() * 1000L;
         maxTimeSinceResumeInMillis = gameMode.getTimeLimitSeconds() * 1000L;
         score = 0;
         wordsUsed = new LinkedHashSet<>();
         initializeWeights();
+
+        if (!language.isBeta()) {
+            logSolutions();
+        }
     }
 
     /**
@@ -261,11 +235,6 @@ public class Game implements Synchronizer.Counter {
         }
     }
 
-    private void setBoard(Context context, LetterGrid b) {
-        letterGrid = b;
-        initializeDictionary(context);
-    }
-
     private void loadSounds(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -274,37 +243,20 @@ public class Game implements Synchronizer.Counter {
         }
     }
 
-    public void initializeDictionary(Context context) {
-        initializeDictionary(context, language);
-    }
-
-    private void initializeDictionary(Context context, Language language) {
-        try {
-            String trieFileName = language.getTrieFileName();
-            int id = context.getResources().getIdentifier("raw/" + trieFileName.substring(0, trieFileName.lastIndexOf('.')), null, context.getPackageName());
-            Trie dict = new StringTrie.Deserializer().deserialize(context.getResources().openRawResource(id), letterGrid, language);
-
-            solutions = dict.solver(letterGrid, w -> w.length() >= gameMode.getMinWordLength());
-
-            Log.d(TAG, "Initializing " + language.getName() + " dictionary");
-            for (String word : solutions.keySet()) {
-                maxWordCountsByLength.put(word.length(), maxWordCountsByLength.get(word.length()) + 1);
-
-                // For debugging and diagnosis, it is convenient to have access to all the words
-                // for some boards printed to the log. This is especially true seeing as I can only
-                // speak / read English, and thus am unable to play the boards of additional
-                // languages without this aid. Once they go out of beta, then it seems inappropriate
-                // to print this.
-                if (language.isBeta()) {
-                    StringBuilder sb = new StringBuilder();
-                    for (char c : word.toCharArray()) {
-                        sb.append(language.toRepresentation(Character.valueOf(c).toString()));
-                    }
-                    Log.d(TAG, "Word: " + sb.toString().toUpperCase(getLanguage().getLocale()));
-                }
+    /**
+     * For debugging and diagnosis, it is convenient to have access to all the words
+     * for some boards printed to the log. This is especially true seeing as I can only
+     * speak / read English, and thus am unable to play the boards of additional
+     * languages without this aid. Once they go out of beta, then it seems inappropriate
+     * to print this.
+     */
+    private void logSolutions() {
+        for (String word : board.getSolutions().keySet()) {
+            StringBuilder sb = new StringBuilder();
+            for (char c : word.toCharArray()) {
+                sb.append(language.toRepresentation(Character.valueOf(c).toString()));
             }
-        } catch (IOException e) {
-            Log.e(TAG, "Error initializing dictionary", e);
+            Log.d(TAG, "Word: " + sb.toString().toUpperCase(getLanguage().getLocale()));
         }
     }
 
@@ -316,7 +268,7 @@ public class Game implements Synchronizer.Counter {
     private void initializeWeights() {
         weights = new int[gameMode.getBoardSize()];
 
-        for (Map.Entry<String, List<Solution>> entry : solutions.entrySet()) {
+        for (Map.Entry<String, List<Solution>> entry : board.getSolutions().entrySet()) {
             // If we're restoring a game and the word was already used, don't include
             // it in the weights
             if (wordList.contains(entry.getKey()) || wordList.contains("+" + entry.getKey())) {
@@ -346,7 +298,7 @@ public class Game implements Synchronizer.Counter {
         // Handle multiple paths for the same word by keeping track of positions
         // already decremented.
         HashSet<Integer> seen = new HashSet<>();
-        for (Solution sol : solutions.get(word)) {
+        for (Solution sol : board.getSolutions().get(word)) {
             for (Integer pos : sol.getPositions()) {
                 if (!seen.contains(pos)) {
                     seen.add(pos);
@@ -357,7 +309,7 @@ public class Game implements Synchronizer.Counter {
     }
 
     public void save(GameSaver saver) {
-        saver.save(letterGrid, timeRemainingInMillis, gameMode, language, wordListToString(), wordCount, start, status);
+        saver.save(board.getLetterGrid(), timeRemainingInMillis, gameMode, language, wordListToString(), wordCount, start, status);
     }
 
     public void start() {
@@ -411,7 +363,7 @@ public class Game implements Synchronizer.Counter {
                 playSound(SOUND_WORD_GOOD);
                 removeWeight(cap);
 
-                if (wordCount == solutions.size()) {
+                if (wordCount == board.getSolutions().size()) {
                     endNow();
                 }
             }
@@ -454,7 +406,7 @@ public class Game implements Synchronizer.Counter {
     }
 
     public int getMaxWordCount() {
-        return solutions.size();
+        return board.getSolutions().size();
     }
 
     public int getWeight(int pos) {
@@ -488,11 +440,11 @@ public class Game implements Synchronizer.Counter {
     }
 
     public boolean isWord(String word) {
-        return solutions.containsKey(word);
+        return board.getSolutions().containsKey(word);
     }
 
-    public LetterGrid getBoard() {
-        return letterGrid;
+    public LetterGrid getLetterGrid() {
+        return board.getLetterGrid();
     }
 
     public long tick() {
@@ -537,11 +489,11 @@ public class Game implements Synchronizer.Counter {
     }
 
     public Map<String, List<Solution>> getSolutions() {
-        return solutions;
+        return board.getSolutions();
     }
 
     public void rotateBoard() {
-        letterGrid.rotate();
+        board.getLetterGrid().rotate();
         if (mRotateHandler != null)
             mRotateHandler.onRotate();
     }

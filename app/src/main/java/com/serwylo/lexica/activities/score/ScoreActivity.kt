@@ -121,7 +121,7 @@ class ScoreActivity : AppCompatActivity() {
             action = Intent.ACTION_SEND
             type = "text/plain"
 
-            val sharedGameData = SharedGameData(game.board.letters.toList(), game.language, game.gameMode, SharedGameData.Type.SHARE, game.wordCount, game.score)
+            val sharedGameData = SharedGameData(game.letterGrid.letters.toList(), game.language, game.gameMode, SharedGameData.Type.SHARE, game.wordCount, game.score)
             val uri = sharedGameData.serialize(SharedGameData.Platform.ANDROID)
             val webUri = sharedGameData.serialize(SharedGameData.Platform.WEB)
             val text = """

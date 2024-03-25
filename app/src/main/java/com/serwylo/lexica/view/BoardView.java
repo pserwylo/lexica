@@ -88,7 +88,7 @@ public class BoardView extends View {
         this.game = game;
 
         maxWeight = game.getMaxWeight(); // Don't calculate this on each paint for performance.
-        boardWidth = game.getBoard().getWidth();
+        boardWidth = game.getLetterGrid().getWidth();
     }
 
     public void highlight(Integer[] highlightedPositions) {
@@ -112,11 +112,11 @@ public class BoardView extends View {
         }
 
         // Draw boxes
-        for (int i = 0; i < game.getBoard().getSize(); i++) {
-            int pos = game.getBoard().getRotatedPosition(i);
+        for (int i = 0; i < game.getLetterGrid().getSize(); i++) {
+            int pos = game.getLetterGrid().getRotatedPosition(i);
 
-            int x = i % game.getBoard().getWidth();
-            int y = i / game.getBoard().getWidth();
+            int x = i % game.getLetterGrid().getWidth();
+            int y = i / game.getLetterGrid().getWidth();
 
             if (highlightedPositions.contains(i)) {
                 p.setColor(theme.board.tile.highlightColour);
@@ -170,7 +170,7 @@ public class BoardView extends View {
 
         for (int x = 0; x < boardWidth; x++) {
             for (int y = 0; y < boardWidth; y++) {
-                int pos = game.getBoard().getRotatedPosition(y * boardWidth + x);
+                int pos = game.getLetterGrid().getRotatedPosition(y * boardWidth + x);
                 int weight = game.getWeight(pos);
 
                 if (game.hintModeColor() || game.hintModeCount()) {
@@ -186,7 +186,7 @@ public class BoardView extends View {
                     canvas.drawText("" + weight, (x * boxsize) + 8, ((y + 1) * boxsize) - 6, p);
                 }
 
-                String letter = game.getBoard().elementAt(x, y);
+                String letter = game.getLetterGrid().elementAt(x, y);
                 String letterForDisplay = game.getLanguage().toDisplay(letter);
                 p.setTextSize(textSize);
                 p.setTextAlign(Paint.Align.CENTER);

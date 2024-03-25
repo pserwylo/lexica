@@ -81,7 +81,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
 
         game = g;
         maxWeight = game.getMaxWeight(); // Don't calculate this on each paint for performance.
-        boardWidth = game.getBoard().getWidth();
+        boardWidth = game.getLetterGrid().getWidth();
 
         mFingerTracker = new FingerTracker(game);
         mKeyboardTracker = new KeyboardTracker();
@@ -147,11 +147,11 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
         canvas.drawRect(0, 0, 100, 200, p);
 
         // Draw boxes
-        for (int i = 0; i < game.getBoard().getSize(); i++) {
-            int pos = game.getBoard().getRotatedPosition(i);
+        for (int i = 0; i < game.getLetterGrid().getSize(); i++) {
+            int pos = game.getLetterGrid().getRotatedPosition(i);
 
-            int x = i % game.getBoard().getWidth();
-            int y = i / game.getBoard().getWidth();
+            int x = i % game.getLetterGrid().getWidth();
+            int y = i / game.getLetterGrid().getWidth();
 
             if (highlighted.contains(i)) {
                 p.setColor(theme.board.tile.highlightColour);
@@ -197,7 +197,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
 
         for (int x = 0; x < boardWidth; x++) {
             for (int y = 0; y < boardWidth; y++) {
-                int pos = game.getBoard().getRotatedPosition(y * boardWidth + x);
+                int pos = game.getLetterGrid().getRotatedPosition(y * boardWidth + x);
                 int weight = game.getWeight(pos);
 
                 if (game.hintModeColor() || game.hintModeCount()) {
@@ -213,7 +213,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
                     canvas.drawText("" + weight, theme.padding + (x * boxsize) + 8, topOfGrid + ((y + 1) * boxsize) - 6, p);
                 }
 
-                String letter = game.getBoard().elementAt(x, y);
+                String letter = game.getLetterGrid().elementAt(x, y);
                 String letterForDisplay = game.getLanguage().toDisplay(letter);
                 p.setTextSize(textSize);
                 p.setTextAlign(Paint.Align.CENTER);
@@ -564,7 +564,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
 
         FingerTracker(Game g) {
             game = g;
-            touched = new int[game.getBoard().getSize()];
+            touched = new int[game.getLetterGrid().getSize()];
             touchedCells = new HashSet<>();
 
             reset();
@@ -621,7 +621,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
 
             int previousX = touched[numTouched - 1] % boardWidth;
             int previousY = touched[numTouched - 1] / boardWidth;
-            return game.getBoard().canTransition(previousX, previousY, x, y);
+            return game.getLetterGrid().canTransition(previousX, previousY, x, y);
         }
 
         private void touchBox(int x, int y) {
@@ -663,7 +663,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
             StringBuilder word = new StringBuilder();
 
             for (int i = 0; i < numTouched; i++) {
-                word.append(game.getBoard().elementAt(touched[i]));
+                word.append(game.getLetterGrid().elementAt(touched[i]));
             }
 
             return word.toString();
@@ -698,9 +698,9 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
             defaultStates = new LinkedList<>();
             defaultAcceptableLetters.clear();
 
-            for (int i = 0; i < game.getBoard().getSize(); i++) {
-                defaultStates.add(new State(game.getBoard().valueAt(i), i));
-                defaultAcceptableLetters.add(game.getBoard().valueAt(i));
+            for (int i = 0; i < game.getLetterGrid().getSize(); i++) {
+                defaultStates.add(new State(game.getLetterGrid().valueAt(i), i));
+                defaultAcceptableLetters.add(game.getLetterGrid().valueAt(i));
             }
 
             reset();
@@ -742,7 +742,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
                         tracked = "";
                     }
 
-                    tracked += game.getBoard().elementAt(nState.pos);
+                    tracked += game.getLetterGrid().elementAt(nState.pos);
                     currentWord = tracked;
 
                     appendedString = true;
@@ -778,25 +778,25 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
             Set<String> getNextStates(LinkedList<State> possibleStates) {
                 Set<String> canTransitionToNext = new HashSet<>();
 
-                for (int i = 0; i < game.getBoard().getSize(); i++) {
+                for (int i = 0; i < game.getLetterGrid().getSize(); i++) {
                     if (selected.contains(i)) {
                         continue;
                     }
 
-                    int fromX = pos % game.getBoard().getWidth();
-                    int fromY = pos / game.getBoard().getWidth();
+                    int fromX = pos % game.getLetterGrid().getWidth();
+                    int fromY = pos / game.getLetterGrid().getWidth();
 
-                    int toX = i % game.getBoard().getWidth();
-                    int toY = i / game.getBoard().getWidth();
+                    int toX = i % game.getLetterGrid().getWidth();
+                    int toY = i / game.getLetterGrid().getWidth();
 
-                    if (!game.getBoard().canTransition(fromX, fromY, toX, toY)) {
+                    if (!game.getLetterGrid().canTransition(fromX, fromY, toX, toY)) {
                         continue;
                     }
 
                     Set<Integer> newStatePositions = new HashSet<>(selected);
                     newStatePositions.add(i);
 
-                    String letter = game.getBoard().valueAt(i);
+                    String letter = game.getLetterGrid().valueAt(i);
                     possibleStates.add(new State(letter, i, newStatePositions));
                     canTransitionToNext.add(letter);
                 }
