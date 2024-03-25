@@ -150,6 +150,28 @@ public class Game implements Synchronizer.Counter {
         }
     }
 
+    public Game(Context context, GameMode gameMode, Language language, Board board) {
+        this.language = language;
+        this.gameMode = gameMode;
+        status = GameStatus.GAME_STARTING;
+        wordCount = 0;
+        wordList = new LinkedList<>();
+
+        loadSounds(context);
+
+        this.board = board;
+
+        timeRemainingInMillis = gameMode.getTimeLimitSeconds() * 1000L;
+        maxTimeSinceResumeInMillis = gameMode.getTimeLimitSeconds() * 1000L;
+        score = 0;
+        wordsUsed = new LinkedHashSet<>();
+        initializeWeights();
+
+        if (!language.isBeta()) {
+            logSolutions();
+        }
+    }
+
     public Game(Context context, GameMode gameMode, Language language, String[] boardLetters) {
         this.language = language;
         this.gameMode = gameMode;
@@ -182,12 +204,13 @@ public class Game implements Synchronizer.Counter {
     public static Game generateGame(@NonNull Context context, @NonNull GameMode gameMode, @NonNull Language language) {
         long startMillis = System.currentTimeMillis();
 
-        Game bestGame = new Game(context, gameMode, language, null);
-        int distanceFromIdeal = Math.abs(bestGame.getMaxWordCount() - language.getIdealWordsPerBoard());
+        CharProbGenerator charProbs = BoardKt.loadCharProps(context, language);
+        Board bestGame = BoardKt.createBoard(context, language, charProbs, gameMode);
+        int distanceFromIdeal = Math.abs(bestGame.getSolutions().size() - language.getIdealWordsPerBoard());
         int numAttempts = 0;
-        while (numAttempts < 5) {
-            Game nextAttempt = new Game(context, gameMode, language, null);
-            int nextDistanceFromIdeal = Math.abs(nextAttempt.getMaxWordCount() - language.getIdealWordsPerBoard());
+        while (numAttempts < 10) {
+            Board nextAttempt = BoardKt.createBoard(context, language, charProbs, gameMode);
+            int nextDistanceFromIdeal = Math.abs(nextAttempt.getSolutions().size() - language.getIdealWordsPerBoard());
             if (nextDistanceFromIdeal < distanceFromIdeal) {
                 bestGame = nextAttempt;
                 distanceFromIdeal = nextDistanceFromIdeal;
@@ -196,8 +219,9 @@ public class Game implements Synchronizer.Counter {
         }
 
         long timeTaken = System.currentTimeMillis() - startMillis;
-        Log.d(TAG, "Generated new " + language.getName() + " board with " + bestGame.getMaxWordCount() + " words after " + (numAttempts + 1) + " attempts in " + timeTaken + "ms. Was aiming for " + language.getIdealWordsPerBoard() + " words.");
-        return bestGame;
+        Log.d(TAG, "Generated new " + language.getName() + " board with " + bestGame.getSolutions().size() + " words after " + (numAttempts + 1) + " attempts in " + timeTaken + "ms. Was aiming for " + language.getIdealWordsPerBoard() + " words.");
+
+        return new Game(context, gameMode, language, bestGame);
     }
 
     public GameMode getGameMode() {
