@@ -62,17 +62,23 @@ public class CharProbGenerator {
 
     }
 
-    public CharProbGenerator(CharProbGenerator charProbGenerator) {
-        charProbs = new ArrayList<>(charProbGenerator.charProbs.size());
-        for (ProbabilityQueue q : charProbGenerator.charProbs) {
-            charProbs.add(new ProbabilityQueue(q));
+    /**
+     * The act of performing roulette wheel selection when choosing letters for a grid means
+     * decreasing the probability of a given word each time it is selected. This mutates the
+     * objects associated with the probability distribution, and so this method resets them
+     * back to their original state. It should be called after each time we use the distribution
+     * to generate a grid.
+     */
+    void reset() {
+        for (var prob : charProbs) {
+            prob.reset();
         }
     }
 
     public Map<String, List<Integer>> getDistribution() {
         Map<String, List<Integer>> dist = new HashMap<>();
         for (ProbabilityQueue p : charProbs) {
-            dist.put(p.letter, new ArrayList<>(p.probQueue));
+            dist.put(p.letter, new ArrayList<>(p.probabilities));
         }
         return dist;
     }
@@ -133,25 +139,21 @@ public class CharProbGenerator {
             board[from] = tmp;
         }
 
+        reset();
+
         return board;
     }
 
-    public static class ProbabilityQueue {
+    static class ProbabilityQueue {
 
         private final String letter;
-        private final LinkedList<Integer> probQueue;
+        private final List<Integer> probabilities;
+        private int index;
 
-        ProbabilityQueue(String l) {
-            letter = l;
-            probQueue = new LinkedList<>();
-        }
-
-        ProbabilityQueue(ProbabilityQueue queue) {
-            letter = queue.getLetter();
-            probQueue = new LinkedList<>();
-            for (var p : queue.probQueue) {
-                probQueue.add(p);
-            }
+        ProbabilityQueue(String letter) {
+            this.letter = letter;
+            probabilities = new ArrayList<>();
+            index = 0;
         }
 
         /**
@@ -162,21 +164,29 @@ public class CharProbGenerator {
         }
 
         void addProb(String s) {
-            probQueue.add(Integer.valueOf(s));
+            probabilities.add(Integer.valueOf(s));
         }
 
         int peekProb() {
-            if (probQueue.isEmpty())
+            if (index >= probabilities.size()) {
                 return 0;
-            return probQueue.peek();
+            }
+            return probabilities.get(index);
         }
 
         int getProb() {
-            if (probQueue.isEmpty())
+            if (index >= probabilities.size()) {
                 return 0;
-            return probQueue.remove();
+            }
+
+            int prob = peekProb();
+            index ++;
+            return prob;
         }
 
+        public void reset() {
+            index = 0;
+        }
     }
 
 }

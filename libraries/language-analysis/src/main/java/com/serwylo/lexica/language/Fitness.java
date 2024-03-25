@@ -51,7 +51,7 @@ public class Fitness {
     private static SummaryStatistics generateStats(File trieDir, CharProbGenerator charProbGenerator, Language language, int iterations) throws IOException {
         SummaryStatistics stats = new SummaryStatistics();
         for (int i = 0; i < iterations; i++) {
-            LetterGrid letterGrid = new CharProbGenerator(charProbGenerator).generateFourByFourBoard();
+            LetterGrid letterGrid = charProbGenerator.generateFourByFourBoard();
             InputStream stream = trieReader(trieDir, language);
             Trie dict = new StringTrie.Deserializer().deserialize(stream, letterGrid, language);
             int numWords = dict.solver(letterGrid, new WordFilter.MinLength(3)).size();
