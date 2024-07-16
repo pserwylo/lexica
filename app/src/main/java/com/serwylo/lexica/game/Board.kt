@@ -39,17 +39,24 @@ fun createBoard(context: Context, language: Language, letters: Array<String>, ga
     return createBoard(context, language, letterGrid, gameMode)
 }
 
+var trieContents: ByteArray? = null
+
 @SuppressLint("DiscouragedApi") // Context.resources.getIdentifier required due to different language selections.
 private fun createBoard(context: Context, language: Language, letterGrid: LetterGrid, gameMode: GameMode): Board {
-    val dict: Trie = try {
-        val trieFileName = language.trieFileName
-        val dictResId = "raw/" + trieFileName.substring(0, trieFileName.lastIndexOf('.'))
-        val id = context.resources.getIdentifier(dictResId, null, context.packageName)
-        StringTrie.Deserializer().deserialize(context.resources.openRawResource(id), letterGrid, language)
-    } catch (e: IOException) {
-        Log.e(TAG, "Error initializing dictionary", e)
-        throw java.lang.IllegalStateException("Error initializing dictionary", e)
+
+    if (trieContents == null) {
+        trieContents = try {
+            val trieFileName = language.trieFileName
+            val dictResId = "raw/" + trieFileName.substring(0, trieFileName.lastIndexOf('.'))
+            val id = context.resources.getIdentifier(dictResId, null, context.packageName)
+            context.resources.openRawResource(id).readBytes()
+        } catch (e: IOException) {
+            Log.e(TAG, "Error initializing dictionary", e)
+            throw java.lang.IllegalStateException("Error initializing dictionary", e)
+        }
     }
+
+    val dict: Trie = StringTrie.Deserializer().deserialize(trieContents!!.inputStream(), letterGrid, language)
 
     val solutions = dict.solver(letterGrid) { w: String -> w.length >= gameMode.minWordLength }
     Log.d(TAG, "Initializing " + language.name + " dictionary")

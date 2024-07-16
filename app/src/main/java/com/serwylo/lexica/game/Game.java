@@ -208,7 +208,7 @@ public class Game implements Synchronizer.Counter {
         Board bestGame = BoardKt.createBoard(context, language, charProbs, gameMode);
         int distanceFromIdeal = Math.abs(bestGame.getSolutions().size() - language.getIdealWordsPerBoard());
         int numAttempts = 0;
-        while (numAttempts < 10) {
+        while (numAttempts < 20) {
             Board nextAttempt = BoardKt.createBoard(context, language, charProbs, gameMode);
             int nextDistanceFromIdeal = Math.abs(nextAttempt.getSolutions().size() - language.getIdealWordsPerBoard());
             if (nextDistanceFromIdeal < distanceFromIdeal) {
